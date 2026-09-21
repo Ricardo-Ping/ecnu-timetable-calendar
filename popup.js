@@ -63,6 +63,7 @@
       return row;
     }));
     $("#preview").hidden = false;
+    $("#actions").hidden = false;
     $("#export").disabled = true;
     $("#qr").disabled = false;
     $("#qrPanel").hidden = true;
@@ -162,6 +163,8 @@
     pendingDownloadId = null;
     chrome.storage.local.remove("pendingDownloadId");
     $("#export").textContent = "正在读取课程…";
+    $("#actions").hidden = true;
+    $("#qrPanel").hidden = true;
     $("#scan").disabled = true;
     $("#export").disabled = true;
     setStatus("正在读取课表…");
@@ -202,6 +205,7 @@
     } catch (error) {
       scanResult = null;
       $("#preview").hidden = true;
+      $("#actions").hidden = true;
       $("#qr").disabled = true;
       $("#qrPanel").hidden = true;
       $("#export").textContent = platformCopy.importButton;
@@ -319,6 +323,7 @@
       code.make();
       $("#qrImage").src = code.createDataURL(5, 12);
       $("#qrPanel").hidden = false;
+      requestAnimationFrame(() => $("#qrPanel").scrollIntoView({ behavior: "smooth", block: "center" }));
       setStatus(`iPhone 二维码已生成（${importUrl.length} 个字符）。`, false);
     } catch (error) {
       $("#qrPanel").hidden = true;
@@ -348,6 +353,7 @@
       chrome.downloads.search({ id: saved.pendingDownloadId }, (items) => {
         if (items[0]?.state === "complete") {
           pendingDownloadId = saved.pendingDownloadId;
+          $("#actions").hidden = false;
           $("#export").disabled = false;
           $("#export").textContent = platformCopy.importButton;
           setStatus(platformCopy.ready, false);

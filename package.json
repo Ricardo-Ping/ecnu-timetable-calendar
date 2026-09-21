@@ -1,6 +1,6 @@
 {
   "name": "ecnu-timetable-calendar",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "private": true,
   "description": "Export ECNU timetables to macOS Calendar and Windows Outlook.",
   "scripts": {
