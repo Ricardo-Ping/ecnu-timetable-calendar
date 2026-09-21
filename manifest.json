@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "华师大课表导入日历",
-  "version": "1.8.1",
-  "description": "从 ECNU 学生管理系统读取课表，导入 macOS、Windows 日历，或扫码导入 iPhone。",
+  "version": "1.9.0",
+  "description": "从 ECNU 学生管理系统读取课表，导入电脑日历，或扫码导入 iPhone 与 Android。",
   "permissions": ["activeTab", "downloads", "downloads.open", "scripting", "storage"],
   "host_permissions": ["https://byyt.ecnu.edu.cn/*", "https://*.ecnu.edu.cn/*"],
   "action": {

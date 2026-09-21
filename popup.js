@@ -324,7 +324,7 @@
       $("#qrImage").src = code.createDataURL(5, 12);
       $("#qrPanel").hidden = false;
       requestAnimationFrame(() => $("#qrPanel").scrollIntoView({ behavior: "smooth", block: "center" }));
-      setStatus(`iPhone 二维码已生成（${importUrl.length} 个字符）。`, false);
+      setStatus(`手机导入二维码已生成（${importUrl.length} 个字符）。`, false);
     } catch (error) {
       $("#qrPanel").hidden = true;
       setStatus(`二维码生成失败：${error.message || String(error)}`, true);

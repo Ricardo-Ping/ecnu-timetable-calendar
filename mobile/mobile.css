@@ -18,6 +18,8 @@ dt { color: #788195; }
 dd { margin: 0; text-align: right; font-weight: 650; }
 button { width: 100%; min-height: 52px; border: 0; border-radius: 14px; padding: 0 16px; color: white; background: #b51f3b; font: inherit; font-size: 16px; font-weight: 750; box-shadow: 0 8px 20px #b51f3b30; }
 button:active { transform: translateY(1px); }
+.download { display: block; margin-top: 12px; padding: 12px; border: 1px solid #d8ddea; border-radius: 12px; color: #9f1c35; text-align: center; text-decoration: none; font-size: 14px; font-weight: 700; background: #fff; }
+.download[hidden] { display: none; }
 .hint, footer { color: #7c8598; font-size: 13px; line-height: 1.6; }
 .hint { margin: 14px 2px 0; }
 footer { margin-top: 24px; text-align: center; font-size: 12px; }

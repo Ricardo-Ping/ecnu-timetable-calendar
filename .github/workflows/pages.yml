@@ -1,4 +1,4 @@
-name: Deploy iPhone import page
+name: Deploy mobile import page
 
 on:
   push:
