@@ -4,6 +4,7 @@
   const $ = (selector) => document.querySelector(selector);
   const dayNames = ["", "周一", "周二", "周三", "周四", "周五", "周六", "周日"];
   const COURSE_TABLE_API_PATH = "/student/for-std/course-table/get-data";
+  const MOBILE_IMPORT_URL = "https://mariomlll.github.io/ecnu-timetable-calendar/mobile/";
   const platformName = navigator.userAgentData?.platform || navigator.platform || "";
   const isWindows = /win/i.test(platformName);
   const isMac = /mac/i.test(platformName);
@@ -63,6 +64,8 @@
     }));
     $("#preview").hidden = false;
     $("#export").disabled = true;
+    $("#qr").disabled = false;
+    $("#qrPanel").hidden = true;
   }
 
   async function injectAndFindFrames(tabId) {
@@ -199,6 +202,8 @@
     } catch (error) {
       scanResult = null;
       $("#preview").hidden = true;
+      $("#qr").disabled = true;
+      $("#qrPanel").hidden = true;
       $("#export").textContent = platformCopy.importButton;
       setStatus(error.message || String(error), true);
     } finally {
@@ -295,7 +300,34 @@
     }
   }
 
+  async function showQrCode() {
+    if (!scanResult?.courses?.length) {
+      setStatus("请先点击“读取并预览课程”。", true);
+      return;
+    }
+    try {
+      if (!$("#firstMonday").value) throw new Error("请先填写第 1 周周一日期。");
+      await saveSettings();
+      const payload = MobilePayload.fromCourses(scanResult.courses, {
+        firstMonday: $("#firstMonday").value,
+        reminderMinutes: Number($("#reminder").value),
+        calendarName: $("#calendarName").value.trim() || "华师大课表"
+      });
+      const importUrl = MobilePayload.makeUrl(MOBILE_IMPORT_URL, payload);
+      const code = qrcode(0, "L");
+      code.addData(importUrl, "Byte");
+      code.make();
+      $("#qrImage").src = code.createDataURL(5, 12);
+      $("#qrPanel").hidden = false;
+      setStatus(`iPhone 二维码已生成（${importUrl.length} 个字符）。`, false);
+    } catch (error) {
+      $("#qrPanel").hidden = true;
+      setStatus(`二维码生成失败：${error.message || String(error)}`, true);
+    }
+  }
+
   function invalidatePreparedCalendar() {
+    $("#qrPanel").hidden = true;
     if (pendingDownloadId === null) return;
     pendingDownloadId = null;
     chrome.storage.local.remove("pendingDownloadId");
@@ -327,6 +359,7 @@
   });
   $("#scan").addEventListener("click", scan);
   $("#export").addEventListener("click", exportCalendar);
+  $("#qr").addEventListener("click", showQrCode);
   $("#firstMonday").addEventListener("change", invalidatePreparedCalendar);
   $("#reminder").addEventListener("change", invalidatePreparedCalendar);
   $("#calendarName").addEventListener("input", invalidatePreparedCalendar);

@@ -1,11 +1,15 @@
 {
   "name": "ecnu-timetable-calendar",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "private": true,
   "description": "Export ECNU timetables to macOS Calendar and Windows Outlook.",
   "scripts": {
-    "test": "node tests/schedule-core.test.js && node scripts/validate-project.js && node --check api-hook.js && node --check content.js && node --check popup.js && node --check lib/schedule-core.js",
+    "test": "node tests/schedule-core.test.js && node tests/mobile-payload.test.js && node scripts/validate-project.js && node --check api-hook.js && node --check content.js && node --check popup.js && node --check lib/schedule-core.js && node --check lib/mobile-payload.js && node --check mobile/mobile.js",
     "package": "sh scripts/package-extension.sh"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "lz-string": "^1.5.0",
+    "qrcode-generator": "^1.4.4"
+  }
 }

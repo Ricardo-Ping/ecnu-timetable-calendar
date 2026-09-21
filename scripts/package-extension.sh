@@ -16,7 +16,10 @@ zip -r -FS "$OUTPUT_FILE" \
   popup.css \
   popup.js \
   lib \
+  vendor \
+  mobile \
   README.md \
+  THIRD-PARTY-NOTICES.md \
   LICENSE
 
 echo "Created $OUTPUT_FILE"

@@ -35,9 +35,18 @@
         <div id="courseList"></div>
       </section>
       <button id="export" class="primary" type="button" disabled>导入到系统日历</button>
+      <button id="qr" class="secondary qr-button" type="button" disabled>生成 iPhone 导入二维码</button>
+      <section id="qrPanel" class="qr-panel" hidden>
+        <div class="qr-title"><strong>用 iPhone 相机扫描</strong><span>不上传课表 🔒</span></div>
+        <img id="qrImage" alt="iPhone 课表导入二维码">
+        <p>扫码后在手机页面点击“添加到 iPhone 日历”，再由 iOS 确认“全部添加”。</p>
+      </section>
       <p id="platformTip" class="tip">先读取并预览课程；日历准备完成后，再点击导入。</p>
     </main>
+    <script src="vendor/lz-string.min.js"></script>
+    <script src="vendor/qrcode.js"></script>
     <script src="lib/schedule-core.js"></script>
+    <script src="lib/mobile-payload.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

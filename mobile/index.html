@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#b51f3b">
+    <title>华师大课表 · iPhone 导入</title>
+    <link rel="stylesheet" href="mobile.css">
+  </head>
+  <body>
+    <main class="card">
+      <header>
+        <div class="logo">历</div>
+        <div>
+          <p class="eyebrow">ECNU → iPhone Calendar</p>
+          <h1>课表已抵达手机 📲</h1>
+        </div>
+      </header>
+
+      <section id="loading" class="message">正在拆开二维码里的课表包裹……</section>
+      <section id="result" hidden>
+        <div class="summary">
+          <div><span>课程安排</span><strong id="courseCount">—</strong></div>
+          <div><span>日历事件</span><strong id="eventCount">—</strong></div>
+        </div>
+        <dl>
+          <div><dt>日历名称</dt><dd id="calendarName"></dd></div>
+          <div><dt>第 1 周周一</dt><dd id="firstMonday"></dd></div>
+          <div><dt>提前提醒</dt><dd id="reminder"></dd></div>
+        </dl>
+        <button id="importButton" type="button">添加到 iPhone 日历</button>
+        <p class="hint">Safari 打开日历预览后，点击“全部添加”，再选择目标日历即可。苹果坚持要你最后点头，我们也只能尊重这份仪式感。🍎</p>
+      </section>
+      <section id="error" class="message error" hidden></section>
+
+      <footer>课表只在你的浏览器里解压和生成，不会上传到服务器。🔒</footer>
+    </main>
+    <script src="../vendor/lz-string.min.js"></script>
+    <script src="../lib/schedule-core.js"></script>
+    <script src="../lib/mobile-payload.js"></script>
+    <script src="mobile.js"></script>
+  </body>
+</html>

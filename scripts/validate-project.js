@@ -17,13 +17,20 @@ for (const file of [
   "api-hook.js",
   "content.js",
   "lib/schedule-core.js",
+  "lib/mobile-payload.js",
+  "vendor/qrcode.js",
+  "vendor/lz-string.min.js",
+  "mobile/index.html",
+  "mobile/mobile.css",
+  "mobile/mobile.js",
   "README.md",
+  "THIRD-PARTY-NOTICES.md",
   "LICENSE"
 ]) {
   assert.ok(fs.existsSync(path.join(root, file)), `missing required file: ${file}`);
 }
 
-const publicSources = ["popup.js", "api-hook.js", "content.js", "README.md"]
+const publicSources = ["popup.js", "api-hook.js", "content.js", "README.md", "mobile/mobile.js"]
   .map((file) => fs.readFileSync(path.join(root, file), "utf8"))
   .join("\n");
 assert.doesNotMatch(publicSources, /__access_token|SESSION=|pstsid|dataId=\d+/i, "possible credential or user-specific identifier found");

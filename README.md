@@ -12,6 +12,7 @@
 - ⏰ 为每节课设置提前提醒
 - 🍎 自动适配 macOS Calendar
 - 🪟 自动适配 Windows Outlook / 默认日历应用
+- 📱 生成二维码，用 iPhone 相机扫码导入 iOS 日历
 - 🔒 所有解析均在浏览器本地完成，不上传 Cookie、Token 或课表内容
 - 🛟 接口读取失败时，自动尝试从页面课表兜底解析
 
@@ -40,6 +41,8 @@
 5. 确认课程、周次、地点和节次。
 6. 点击平台对应的 **导入到日历** 按钮，在日历应用中确认导入。
 
+如果想把课表送进 iPhone，则在课程读取完成后点击 **生成 iPhone 导入二维码**，再用相机扫码。电脑负责打包，手机负责拆包，谁也不用在微信里给自己发送 `.ics`。📦
+
 扩展采用两段式交互：第一次点击读取课程并准备日历文件，第二次点击负责打开系统日历。这样既符合浏览器的安全规则，也避免你去下载目录里玩“大家来找 `.ics`”。🔍
 
 ## 🍎 macOS
@@ -56,6 +59,18 @@
 
 生成文件包含标准 `VALARM`、`VTIMEZONE` 和 Outlook 忙碌状态字段。也就是说，提醒不是一句“理论上支持”，而是认真写进日历文件里的。⏰
 
+## 📱 iPhone 扫码导入
+
+1. 在扩展中读取并预览课程。
+2. 点击 **生成 iPhone 导入二维码**。
+3. 用 iPhone 相机扫码，打开导入页。
+4. 点击 **添加到 iPhone 日历**。
+5. 在 iOS 的日历预览中点击“全部添加”，选择目标日历。
+
+一整个学期的 `.ics` 往往大到塞不进二维码，所以扩展放进去的是压缩后的课程结构。扫码打开的 GitHub Pages 页面会在 iPhone 本地还原课表并生成 `.ics`；数据位于 URL 的 `#` 片段中，浏览器不会把它发送给网页服务器。课程不出门，隐私不旷课。🔒
+
+> iOS 不允许网页静默修改系统日历，因此最后的“全部添加”必须由你亲自确认。这不是插件偷懒，是苹果把日历门卫安排得很认真。🍎
+
 ## 🔐 隐私与权限
 
 扩展只申请完成任务所需的权限：
@@ -65,7 +80,7 @@
 - `downloads` / `downloads.open`：生成并打开 `.ics`
 - `byyt.ecnu.edu.cn`：访问学校课表接口
 
-扩展不会把登录凭据硬编码进源码，也不会把课表发送到第三方服务器。请不要在 Issue 中粘贴 Cookie、Token 或完整 curl——它们不是“调试信息”，而是账号钥匙。🗝️
+扩展不会把登录凭据硬编码进源码，也不会把课表发送到第三方服务器。iPhone 导入页只读取二维码 URL 的本地片段，并在手机浏览器中生成日历文件。请不要在 Issue 中粘贴 Cookie、Token 或完整 curl——它们不是“调试信息”，而是账号钥匙。🗝️
 
 ## 🧑‍💻 开发
 
@@ -86,7 +101,9 @@ npm run package
 ├── popup.html / popup.css / popup.js
 ├── api-hook.js
 ├── content.js
-├── lib/schedule-core.js
+├── lib/schedule-core.js / mobile-payload.js
+├── mobile/              # iPhone 本地导入页
+├── vendor/              # 二维码与压缩库
 ├── tests/
 └── scripts/
 ```
@@ -95,12 +112,13 @@ npm run package
 
 - 每次 Push / Pull Request 自动执行测试并生成构建产物。
 - 推送 `v*` 标签时，自动校验标签与 `manifest.json` 版本一致，并创建 GitHub Release。
+- `main` 更新后自动部署 iPhone 导入页到 GitHub Pages。
 
 发布新版本：
 
 ```bash
-git tag v1.7.0
-git push origin v1.7.0
+git tag v1.8.0
+git push origin v1.8.0
 ```
 
 剩下的交给机器人。机器人不抱怨加班，这一点令人羡慕。🤖
