@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "华师大课表导入日历",
+  "version": "1.7.0",
+  "description": "从 ECNU 学生管理系统读取学期课表并导入 macOS Calendar 或 Windows Outlook。",
+  "permissions": ["activeTab", "downloads", "downloads.open", "scripting", "storage"],
+  "host_permissions": ["https://byyt.ecnu.edu.cn/*", "https://*.ecnu.edu.cn/*"],
+  "action": {
+    "default_title": "导出课表到日历",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://byyt.ecnu.edu.cn/*", "https://*.ecnu.edu.cn/*"],
+      "js": ["api-hook.js"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://byyt.ecnu.edu.cn/*", "https://*.ecnu.edu.cn/*"],
+      "js": ["lib/schedule-core.js", "content.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ]
+}

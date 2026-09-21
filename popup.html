@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>课表导入日历</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="logo">历</div>
+        <div><h1>课表导入日历</h1><p id="platformSubtitle">ECNU → 系统日历</p></div>
+      </header>
+
+      <section class="settings">
+        <label>第 1 周周一<input id="firstMonday" type="date"></label>
+        <label>提前提醒
+          <select id="reminder">
+            <option value="0">上课时</option>
+            <option value="5">5 分钟</option>
+            <option value="10">10 分钟</option>
+            <option value="15" selected>15 分钟</option>
+            <option value="30">30 分钟</option>
+            <option value="60">1 小时</option>
+          </select>
+        </label>
+        <label class="wide">日历名称<input id="calendarName" value="华师大课表" maxlength="40"></label>
+      </section>
+
+      <button id="scan" class="secondary" type="button">读取并预览课程</button>
+      <div id="status" role="status">请先打开学生管理系统的“我的课表”页面。</div>
+      <section id="preview" hidden>
+        <div class="preview-title"><strong id="summary"></strong><span id="eventSummary"></span></div>
+        <div id="courseList"></div>
+      </section>
+      <button id="export" class="primary" type="button" disabled>导入到系统日历</button>
+      <p id="platformTip" class="tip">先读取并预览课程；日历准备完成后，再点击导入。</p>
+    </main>
+    <script src="lib/schedule-core.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

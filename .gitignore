@@ -1,0 +1,7 @@
+.DS_Store
+*.zip
+dist/
+node_modules/
+
+# Local copies/extracted packages that are not source files.
+/课程插件/
