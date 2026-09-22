@@ -1,6 +1,23 @@
 const assert = require("node:assert/strict");
 const core = require("../lib/schedule-core.js");
 
+assert.deepEqual(core.DEFAULT_PERIODS, {
+  1: ["08:00", "08:45"],
+  2: ["08:50", "09:35"],
+  3: ["09:50", "10:35"],
+  4: ["10:40", "11:25"],
+  5: ["11:30", "12:15"],
+  6: ["13:00", "13:45"],
+  7: ["13:50", "14:35"],
+  8: ["14:50", "15:35"],
+  9: ["15:40", "16:25"],
+  10: ["16:30", "17:15"],
+  11: ["18:00", "18:45"],
+  12: ["18:50", "19:35"],
+  13: ["19:40", "20:25"],
+  14: ["20:30", "21:15"]
+});
+
 assert.deepEqual(core.parseWeekSpec("1~3,5~18周"), [1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
 assert.deepEqual(core.parseWeekSpec("1-9周单"), [1, 3, 5, 7, 9]);
 assert.deepEqual(core.parseWeekSpec("2~10双周"), [2, 4, 6, 8, 10]);
@@ -25,7 +42,24 @@ assert.match(calendar.content, /TRIGGER:-PT15M/);
 assert.match(calendar.content, /BEGIN:VTIMEZONE/);
 assert.match(calendar.content, /TZID:Asia\/Shanghai/);
 assert.match(calendar.content, /X-MICROSOFT-CDO-BUSYSTATUS:BUSY/);
+assert.match(calendar.content, /LOCATION:华东师范大学普陀校区 二附中实验楼阶梯教室/);
 assert.ok(!calendar.content.includes("20261012T104000"), "第 4 周不应生成事件");
+
+const locationCases = [
+  ["闵行校区 第一教学楼101", "华东师范大学闵行校区 第一教学楼101"],
+  ["普陀校区 教书院418", "华东师范大学普陀校区 田家炳教育书院418"],
+  ["普陀校区 田家炳教育书院419", "华东师范大学普陀校区 田家炳教育书院419"],
+  ["华东师范大学普陀校区 文附楼225", "华东师范大学普陀校区 文附楼225"],
+  ["上海图书馆", "上海图书馆"]
+];
+for (const [location, expected] of locationCases) {
+  const result = core.buildIcs([{
+    ...course,
+    weeks: [1],
+    location
+  }], { firstMonday: "2026-09-21", reminderMinutes: 15 });
+  assert.match(result.content, new RegExp(`LOCATION:${expected}`));
+}
 
 const apiResult = core.parseApiTimetable({
   currentWeek: 2,
