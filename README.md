@@ -126,8 +126,8 @@ npm run package
 发布新版本：
 
 ```bash
-git tag v1.9.0
-git push origin v1.9.0
+git tag v1.9.1
+git push origin v1.9.1
 ```
 
 剩下的交给机器人。机器人不抱怨加班，这一点令人羡慕。🤖
