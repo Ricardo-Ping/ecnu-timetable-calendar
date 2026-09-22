@@ -45,6 +45,17 @@ assert.match(calendar.content, /X-MICROSOFT-CDO-BUSYSTATUS:BUSY/);
 assert.match(calendar.content, /LOCATION:华东师范大学普陀校区 二附中实验楼阶梯教室/);
 assert.ok(!calendar.content.includes("20261012T104000"), "第 4 周不应生成事件");
 
+const stableOriginal = core.buildIcs([{ ...course, weeks: [1], seriesKey: "api:lesson-1:0" }], { firstMonday: "2026-09-21" });
+const stableMoved = core.buildIcs([{
+  ...course,
+  weeks: [1],
+  weekday: 3,
+  startPeriod: 8,
+  endPeriod: 9,
+  seriesKey: "api:lesson-1:0"
+}], { firstMonday: "2026-09-21" });
+assert.equal(stableOriginal.content.match(/UID:([^\r\n]+)/)[1], stableMoved.content.match(/UID:([^\r\n]+)/)[1], "调课后 UID 应保持稳定");
+
 const locationCases = [
   ["闵行校区 第一教学楼101", "华东师范大学闵行校区 第一教学楼101"],
   ["普陀校区 教书院418", "华东师范大学普陀校区 田家炳教育书院418"],
@@ -80,5 +91,7 @@ assert.equal(apiResult.courses.length, 2);
 assert.deepEqual(apiResult.courses[0].weeks, [3, 5, 6, 7, 8, 9, 10, 11, 12]);
 assert.equal(apiResult.courses[1].weekday, 6);
 assert.equal(apiResult.courses[1].location, "普陀校区 文附楼225");
+assert.equal(apiResult.courses[0].seriesKey, "api:893117:0");
+assert.equal(apiResult.courses[1].seriesKey, "api:893117:1");
 
 console.log("schedule-core tests passed");
