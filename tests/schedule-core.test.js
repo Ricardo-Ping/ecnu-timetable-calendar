@@ -25,7 +25,24 @@ assert.match(calendar.content, /TRIGGER:-PT15M/);
 assert.match(calendar.content, /BEGIN:VTIMEZONE/);
 assert.match(calendar.content, /TZID:Asia\/Shanghai/);
 assert.match(calendar.content, /X-MICROSOFT-CDO-BUSYSTATUS:BUSY/);
+assert.match(calendar.content, /LOCATION:华东师范大学普陀校区 二附中实验楼阶梯教室/);
 assert.ok(!calendar.content.includes("20261012T104000"), "第 4 周不应生成事件");
+
+const locationCases = [
+  ["闵行校区 第一教学楼101", "华东师范大学闵行校区 第一教学楼101"],
+  ["普陀校区 教书院418", "华东师范大学普陀校区 田家炳教育书院418"],
+  ["普陀校区 田家炳教育书院419", "华东师范大学普陀校区 田家炳教育书院419"],
+  ["华东师范大学普陀校区 文附楼225", "华东师范大学普陀校区 文附楼225"],
+  ["上海图书馆", "上海图书馆"]
+];
+for (const [location, expected] of locationCases) {
+  const result = core.buildIcs([{
+    ...course,
+    weeks: [1],
+    location
+  }], { firstMonday: "2026-09-21", reminderMinutes: 15 });
+  assert.match(result.content, new RegExp(`LOCATION:${expected}`));
+}
 
 const apiResult = core.parseApiTimetable({
   currentWeek: 2,
