@@ -43,6 +43,11 @@ assert.match(calendar.content, /BEGIN:VTIMEZONE/);
 assert.match(calendar.content, /TZID:Asia\/Shanghai/);
 assert.match(calendar.content, /X-MICROSOFT-CDO-BUSYSTATUS:BUSY/);
 assert.match(calendar.content, /LOCATION:华东师范大学普陀校区 二附中实验楼阶梯教室/);
+const unfoldedCalendar = calendar.content.replace(/\r\n /g, "");
+assert.match(unfoldedCalendar, /GEO:31\.227938;121\.404680/);
+assert.match(unfoldedCalendar, /X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS="华东师范大学普陀校区 二附中实验楼阶梯教室"/);
+assert.match(unfoldedCalendar, /X-TITLE="华东师范大学普陀校区 二附中实验楼阶梯教室":geo:31\.227938,121\.404680/);
+assert.match(unfoldedCalendar, /URL:https:\/\/maps\.apple\.com\/\?q=/);
 assert.ok(!calendar.content.includes("20261012T104000"), "第 4 周不应生成事件");
 
 const stableOriginal = core.buildIcs([{ ...course, weeks: [1], seriesKey: "api:lesson-1:0" }], { firstMonday: "2026-09-21" });
@@ -71,6 +76,22 @@ for (const [location, expected] of locationCases) {
   }], { firstMonday: "2026-09-21", reminderMinutes: 15 });
   assert.match(result.content, new RegExp(`LOCATION:${expected}`));
 }
+
+const minhangCalendar = core.buildIcs([{
+  ...course,
+  weeks: [1],
+  location: "闵行校区 第一教学楼101"
+}], { firstMonday: "2026-09-21" }).content.replace(/\r\n /g, "");
+assert.match(minhangCalendar, /GEO:31\.032910;121\.449530/);
+assert.match(minhangCalendar, /geo:31\.032910,121\.449530/);
+
+const externalCalendar = core.buildIcs([{
+  ...course,
+  weeks: [1],
+  location: "上海图书馆"
+}], { firstMonday: "2026-09-21" }).content.replace(/\r\n /g, "");
+assert.doesNotMatch(externalCalendar, /X-APPLE-STRUCTURED-LOCATION/);
+assert.match(externalCalendar, /URL:https:\/\/maps\.apple\.com\/\?q=/);
 
 const apiResult = core.parseApiTimetable({
   currentWeek: 2,
