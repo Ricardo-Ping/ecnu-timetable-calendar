@@ -10,7 +10,7 @@ const courses = [{
   weekday: 1,
   startPeriod: 4,
   endPeriod: 5,
-  location: "普陀校区 二附中实验楼阶梯教室"
+  location: "普陀校区 二附中实验楼"
 }, {
   title: "机器学习",
   teachingCode: "202621165",
@@ -19,7 +19,7 @@ const courses = [{
   weekday: 4,
   startPeriod: 8,
   endPeriod: 9,
-  location: "普陀校区 教书院418"
+  location: "普陀校区 教书院"
 }];
 
 const payload = payloads.fromCourses(courses, {
@@ -56,7 +56,7 @@ const legacyPayload = {
   m: "2026-09-14",
   r: 15,
   n: "华师大课表",
-  c: [["机器学习", "202621165", "1~18周", 4, 8, 9, "普陀校区 教书院418"]]
+  c: [["机器学习", "202621165", "1~18周", 4, 8, 9, "普陀校区 教书院"]]
 };
 const legacyDecoded = payloads.decode(payloads.encode(legacyPayload));
 assert.equal(legacyDecoded.v, 1);
