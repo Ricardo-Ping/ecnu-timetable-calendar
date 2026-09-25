@@ -44,9 +44,9 @@ assert.match(calendar.content, /TZID:Asia\/Shanghai/);
 assert.match(calendar.content, /X-MICROSOFT-CDO-BUSYSTATUS:BUSY/);
 assert.match(calendar.content, /LOCATION:华东师范大学普陀校区 二附中实验楼阶梯教室/);
 const unfoldedCalendar = calendar.content.replace(/\r\n /g, "");
-assert.match(unfoldedCalendar, /GEO:31\.227938;121\.404680/);
+assert.match(unfoldedCalendar, /GEO:31\.224052;121\.399648/);
 assert.match(unfoldedCalendar, /X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS="华东师范大学普陀校区 二附中实验楼阶梯教室"/);
-assert.match(unfoldedCalendar, /X-TITLE="华东师范大学普陀校区 二附中实验楼阶梯教室":geo:31\.227938,121\.404680/);
+assert.match(unfoldedCalendar, /X-TITLE="华东师范大学普陀校区 二附中实验楼阶梯教室":geo:31\.224052,121\.399648/);
 assert.match(unfoldedCalendar, /URL:https:\/\/maps\.apple\.com\/\?q=/);
 assert.ok(!calendar.content.includes("20261012T104000"), "第 4 周不应生成事件");
 
@@ -84,6 +84,27 @@ const minhangCalendar = core.buildIcs([{
 }], { firstMonday: "2026-09-21" }).content.replace(/\r\n /g, "");
 assert.match(minhangCalendar, /GEO:31\.032910;121\.449530/);
 assert.match(minhangCalendar, /geo:31\.032910,121\.449530/);
+
+function eventGeoFor(location) {
+  const content = core.buildIcs([{
+    ...course,
+    weeks: [1],
+    location
+  }], { firstMonday: "2026-09-21" }).content.replace(/\r\n /g, "");
+  return content.match(/GEO:([^\r\n]+)/)?.[1] || "";
+}
+
+assert.notEqual(
+  eventGeoFor("普陀校区 小教楼203室"),
+  eventGeoFor("普陀校区 干训楼阶梯教室"),
+  "普陀校区不同楼宇不应共用校区中心坐标"
+);
+assert.equal(eventGeoFor("普陀校区 小教楼203室"), "31.228443;121.402722");
+assert.equal(eventGeoFor("普陀校区 干训楼阶梯教室"), "31.231929;121.401502");
+assert.equal(eventGeoFor("普陀校区 教书院418"), "31.232862;121.402135");
+assert.equal(eventGeoFor("普陀校区 文史楼107"), "31.230611;121.404023");
+assert.equal(eventGeoFor("普陀校区 文附楼225"), "31.228494;121.403977");
+assert.equal(eventGeoFor("普陀校区 未收录教学楼101"), "31.227938;121.404680");
 
 const externalCalendar = core.buildIcs([{
   ...course,
