@@ -44,11 +44,11 @@ assert.match(calendar.content, /TZID:Asia\/Shanghai/);
 assert.match(calendar.content, /X-MICROSOFT-CDO-BUSYSTATUS:BUSY/);
 assert.match(calendar.content, /LOCATION:华东师范大学普陀校区 二附中实验楼/);
 const unfoldedCalendar = calendar.content.replace(/\r\n /g, "");
-assert.match(unfoldedCalendar, /GEO:31\.229186;121\.404683/);
+assert.match(unfoldedCalendar, /GEO:31\.224052;121\.399648/);
 assert.match(unfoldedCalendar, /X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS="华东师范大学普陀校区 二附中实验楼"/);
-assert.match(unfoldedCalendar, /X-TITLE="华东师范大学普陀校区 二附中实验楼":geo:31\.227350,121\.409334/);
+assert.match(unfoldedCalendar, /X-TITLE="华东师范大学普陀校区 二附中实验楼":geo:31\.222214,121\.404299/);
 assert.match(unfoldedCalendar, /URL:https:\/\/maps\.apple\.com\/\?q=/);
-assert.match(unfoldedCalendar, /&ll=31\.227350%2C121\.409334/);
+assert.match(unfoldedCalendar, /&ll=31\.222214%2C121\.404299/);
 assert.ok(!calendar.content.includes("20261012T104000"), "第 4 周不应生成事件");
 
 const stableOriginal = core.buildIcs([{ ...course, weeks: [1], seriesKey: "api:lesson-1:0" }], { firstMonday: "2026-09-21" });
@@ -113,6 +113,16 @@ assert.equal(eventGeoFor("普陀校区 教书院"), "31.232833;121.401968");
 assert.equal(eventAppleGeoFor("普陀校区 教书院"), "31.230999,121.406620");
 assert.equal(eventAppleGeoFor("普陀校区 文附楼"), "31.226580,121.408581");
 assert.equal(eventAppleGeoFor("普陀校区 小教楼"), "31.226574,121.407391");
+assert.equal(
+  eventAppleGeoFor("普陀校区 二附中实验楼阶梯教室"),
+  "31.222214,121.404299",
+  "二附中实验楼阶梯教室应定位到二附中实验楼"
+);
+assert.notEqual(
+  eventAppleGeoFor("普陀校区 二附中实验楼阶梯教室"),
+  eventAppleGeoFor("普陀校区 体育馆"),
+  "二附中实验楼阶梯教室不应定位到体育馆"
+);
 
 assert.notEqual(
   eventAppleGeoFor("普陀校区 小教楼"),
@@ -121,11 +131,11 @@ assert.notEqual(
 );
 assert.equal(eventGeoFor("普陀校区 未收录教学楼"), "");
 
-// Every precise location shipped by the extension is checked against an exact
-// POI returned by Amap's official coordinate picker. These are building names
-// only; no personal classroom numbers are stored in the table or the test.
+// Every precise location shipped by the extension is checked against a named
+// map POI and, where available, ECNU's official campus map. These are building
+// names only; no personal classroom numbers are stored in the table or test.
 const verifiedAmapGeos = [
-  ["普陀校区 二附中实验楼", "31.227350,121.409334"],
+  ["普陀校区 二附中实验楼", "31.222214,121.404299"],
   ["普陀校区 田家炳教育书院", "31.230999,121.406620"],
   ["普陀校区 干训楼", "31.230136,121.406214"],
   ["普陀校区 文史楼", "31.228777,121.408641"],
